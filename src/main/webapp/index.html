@@ -1,0 +1,79 @@
+<!doctype html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<html>
+<head>
+    <title>Demo from lc</title>
+    <script type="text/javascript" src="jquery-1.8.3.js"></script>
+    <script type="text/javascript">
+        function cc(id) {
+            alert(id);
+            location.href="http://localhost:8080/season/product/delete?id="+id;
+
+        };
+        $(document).ready(function() {
+        $(function bb () {
+
+                $.ajax({
+                    type: "get",
+                    dataType: "json",
+                    url: "http://localhost:8080/season/product/AllComments",
+                    data: null,
+                    success: function (data) {
+                        $("#commentDiv").empty();
+                        var commentsText = "";
+                        $.each(data.comments, function (commentIndex, comment) {
+                            commentsText += "<li>" +
+                                    "<div style='background-color: aquamarine'>" + "游客" + comment.commentId + "说：</div>" +
+                                    "<div style='background-color: chartreuse'><b>" +  comment.commentContent + "</b></div>" +
+                                    "<div style='background-color: chartreuse'>" + "评论时间：" + new Date(comment.createDate).getFullYear()+"."+new Date(comment.createDate).getUTCMonth()+"."+new Date(comment.createDate).getDate()+"."+ new Date(comment.createDate).getHours()+"."+new Date(comment.createDate).getMinutes() +
+                              "<button  id='"+comment.commentId+"' onclick='cc("+comment.commentId+");'>"+"删除"+"</button>" + "</div>" +
+                                    "</li>";
+                        });
+                        $("#commentDiv").append(commentsText);
+                        $("#flag").empty();
+                    }
+                });
+            });
+
+            $("#a_c").click(function aa () {
+
+                var enterComment = $("#comment").val();
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    url: "http://localhost:8080/season/product/saveComment",
+                    data: {
+                        comment: enterComment
+                    },
+                    success: function (data) {
+                    location.href="http://localhost:8080/season/index.html"
+                    }
+                });
+
+            });
+
+        });
+    </script>
+</head>
+<body>
+
+
+<img src='./dbx.png' border=0/>
+
+
+ 
+
+<h2>642升 变频风冷电冰箱</h2>
+<h3><font color="red">￥4299</font></h3>
+<h4><B>·</B>变频压缩机</h4>
+<h4><B>·</B>节能静音 防霉抗菌</h4>
+<h4><B>·</B>低温净味系统</h4>
+ 
+
+<textarea type="text" id="comment" cols="80" rows="6"></textarea>
+<input type="button" id="a_c" value="发表"/>
+<span id="flag"></span><br>
+<div id="commentDiv"></div>
+
+</body>
+</html>
