@@ -6,54 +6,108 @@
     <script type="text/javascript" src="jquery-1.8.3.js"></script>
     <script type="text/javascript">
         function cc(id) {
-            alert(id);
-            location.href="http://localhost:8080/season/product/delete?id="+id;
+
+            location.href="http://localhost:8080/season/season/delete?id="+id;
+
+        };
+        function dd(id) {
+
+           $("#div1").show();
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                url: "http://localhost:8080/season/season/findByid?id="+id,
+                data: null,
+                success: function (data) {
+                    alert(data.comment.productName);
+                    alert(data.comment.commentContent);
+                    $('#id').val(data.comment.commentId);
+                    $('#comment1').val(data.comment.commentContent);
+                    $ ("#product1 Option"). each( function () {
+                        if($(this).text()==data.comment.productName)
+                        {
+                            $(this).attr("selected","selected");
+
+
+                        }
+                    })
+                }
+            });
+
 
         };
         $(document).ready(function() {
-        $(function bb () {
+            bb();
+
+          function bb () {
 
                 $.ajax({
                     type: "get",
                     dataType: "json",
-                    url: "http://localhost:8080/season/product/AllComments",
+                    url:"http://localhost:8080/season/season/findAllComments",
                     data: null,
                     success: function (data) {
+
                         $("#commentDiv").empty();
                         var commentsText = "";
                         $.each(data.comments, function (commentIndex, comment) {
+
                             commentsText += "<li>" +
-                                    "<div style='background-color: aquamarine'>" + "游客" + comment.commentId + "说：</div>" +
-                                    "<div style='background-color: chartreuse'><b>" +  comment.commentContent + "</b></div>" +
-                                    "<div style='background-color: chartreuse'>" + "评论时间：" + new Date(comment.createDate).getFullYear()+"."+new Date(comment.createDate).getUTCMonth()+"."+new Date(comment.createDate).getDate()+"."+ new Date(comment.createDate).getHours()+"."+new Date(comment.createDate).getMinutes() +
-                              "<button  id='"+comment.commentId+"' onclick='cc("+comment.commentId+");'>"+"删除"+"</button>" + "</div>" +
-                                    "</li>";
+                                "<div style='background-color: aquamarine'>" + "游客" + comment.commentId + "说：</div>" +
+                                "<div style='background-color: aqua'>" + "产品:" + comment.productName + "</div>" +
+                                "<div style='background-color: chartreuse'><b>" +  comment.commentContent + "</b></div>" +
+                                "<div style='background-color: chartreuse'>" + "评论时间：" + new Date(comment.createDate).getFullYear()+"."+new Date(comment.createDate).getUTCMonth()+"."+new Date(comment.createDate).getDate()+"."+ new Date(comment.createDate).getHours()+"."+new Date(comment.createDate).getMinutes() +
+                               "<button  id='"+comment.commentId+"' onclick='cc("+comment.commentId+");'>"+"删除"+"</button>" +"<button  id='"+comment.commentId+"' onclick='dd("+comment.commentId+");'>"+"修改"+"</button>"+ "</div>" +
+                                "</li>";
                         });
                         $("#commentDiv").append(commentsText);
-                        $("#flag").empty();
-                    }
+
+                    },
                 });
-            });
+            };
 
             $("#a_c").click(function aa () {
-
                 var enterComment = $("#comment").val();
+                var productName = $("#product").val();
+                alert(productName);
                 $.ajax({
                     type: "post",
                     dataType: "json",
-                    url: "http://localhost:8080/season/product/saveComment",
+                    url: "http://localhost:8080/season/season/saveComment",
                     data: {
-                        comment: enterComment
+                        comment: enterComment,
+                        product_name:productName,
                     },
                     success: function (data) {
-                    location.href="http://localhost:8080/season/index.html"
+                        location.href="http://localhost:8080/season/index.html"
                     }
                 });
+
+            });
+            $("#b_c").click(function aa (id) {
+                    var data = $(".f1").serializeArray();
+                    $.ajax({
+                        url: "http://localhost:8080/season/season/update",
+                        type : "post",
+                        data : data,
+                        dataType : "json",
+                        success : function(json) {
+                            alert(562);
+                            location.href="http://localhost:8080/season/index.html"
+
+                        }
+
+                    });
+
+
+
+
 
             });
 
         });
     </script>
+
 </head>
 <body>
 
@@ -69,9 +123,27 @@
 <h4><B>·</B>节能静音 防霉抗菌</h4>
 <h4><B>·</B>低温净味系统</h4>
  
-
+<select style="width: auto" id="product">
+<option>冰箱</option>
+<option>洗衣机</option>
+<option>电视机</option>
+<option>热水器</option>
+</select><br>
 <textarea type="text" id="comment" cols="80" rows="6"></textarea>
 <input type="button" id="a_c" value="发表"/>
+<div style=" display:none;position: absolute; left:700px;top:500px "id="div1">
+    <form action="" class="f1">
+<input type="hidden" name="commentId"  id="id" />
+<select style="width: auto" id="product1" name="productName">
+    <option value="冰箱">冰箱</option>
+    <option value="洗衣机">洗衣机</option>
+    <option value="电视机">电视机</option>
+    <option value="热水器">热水器</option>
+</select><br>
+<textarea type="text" id="comment1" cols="60" rows="6" name="commentContent"></textarea>
+ <input type="button" id="b_c" value="确定"/>
+    </form>>
+</div>
 <span id="flag"></span><br>
 <div id="commentDiv"></div>
 

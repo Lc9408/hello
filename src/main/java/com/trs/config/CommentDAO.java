@@ -1,8 +1,10 @@
 package com.trs.config;
 
 import com.season.core.db.Dao;
+import com.season.core.db.Pojo;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,11 +19,12 @@ public class CommentDAO {
     }
 
     //评论数据的更新
-    public void update(int commentId , String commentContent){
+    public void update(int commentId , String commentContent, Date CreateDate){
         Comment vo = new Comment();
         vo.setCommentId(commentId);
         vo.setCommentContent(commentContent);
-        vo.update("comment_content");
+        vo.setCreateDate(CreateDate);
+        vo.update("comment_content","create_date");
     }
 
     //评论数据的删除
@@ -45,6 +48,7 @@ public class CommentDAO {
     //根据产品名查询全部评论
     public List<Comment> findAllByProduct(String productName){
         return Dao.findByColumn(Comment.class,"product_name",productName);
+
     }
 
 }

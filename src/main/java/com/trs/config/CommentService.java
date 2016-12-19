@@ -2,6 +2,7 @@ package com.trs.config;
 
 
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -15,10 +16,12 @@ public class CommentService {
         DAOFactory.getCommentDAOInstance().delete(commentId);
     }
 
-    public void update(int commentId,String commentContent){
-        DAOFactory.getCommentDAOInstance().update(commentId,commentContent);
+    public void update(int commentId, String commentContent, Date date){
+        DAOFactory.getCommentDAOInstance().update(commentId,commentContent,date);
     }
-
+    public Comment get(int commentId){
+        return  DAOFactory.getCommentDAOInstance().get(commentId);
+    }
     public List<Comment> findAll(){
         return DAOFactory.getCommentDAOInstance().findAll();
     }
